@@ -1,3 +1,0 @@
-API_KEY = "oZR5fY9HRanYvA80"
-API_SECRET_KEY = "8IwceMScj2KnJoJwMdJaEWISOy1OTEWu"
-API_HOST = "http://localhost:1337"
