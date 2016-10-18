@@ -7,7 +7,7 @@ import json
 
 import requests
 
-from lib import config
+from Shiny import config
 
 
 class ShinyError(Exception):
