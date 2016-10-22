@@ -4,3 +4,34 @@
 `pip install Shiny_SDK`
 
 
+## 初始化
+
+```Python
+import Shiny
+
+shiny  = Shiny.Shiny(API_KEY, API_SECRET_KEY, API_HOST = 'https://shiny.kotori.moe')
+```
+
+请注意，API_HOST有默认值，如果需要手工指定，最后不要带斜杠。
+
+## 方法
+
+`Shiny.add(spider_name, level, data)`
+
+向Shiny提交一个新的事件
+
+参数说明：
+
+| 参数名 | 参数类型 | 参数说明 |
+| ------|-------|-----------|
+| spider_name| string | spider标识符|
+| level | int | 事件等级（1~5）|
+| data | dict  | 事件内容 包括 title、link、cover、content|
+
+
+如果失败会抛出一个`ShinyError`，请注意捕获。
+
+
+`Shiny.recent()`
+
+查询最新事件，返回一个`list`。
