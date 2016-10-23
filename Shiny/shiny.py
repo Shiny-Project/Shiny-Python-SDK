@@ -10,8 +10,9 @@ import requests
 
 
 class ShinyError(Exception):
-    def __init__(self, message):
+    def __init__(self, message, code = 'unknown_error'):
         self.message = message
+        self.code = message
 
 
 class Shiny:
@@ -54,7 +55,12 @@ class Shiny:
         response = requests.post(url, payload)
 
         if response.status_code != 200:
-            raise ShinyError('Network error:' + str(response.status_code))
+            try:
+                error = json.loads(response.text)
+            except Exception as e:
+                raise ShinyError('Network error: ' + str(response.status_code))
+
+            raise ShinyError('Shiny error: ' + str(error['error']['info']), code=str(error['error']['code']))
 
     def recent(self):
         """获取最新项目"""

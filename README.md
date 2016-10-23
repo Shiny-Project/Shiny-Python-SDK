@@ -16,7 +16,7 @@ shiny  = Shiny.Shiny(API_KEY, API_SECRET_KEY, API_HOST = 'https://shiny.kotori.m
 
 ## 方法
 
-`Shiny.add(spider_name, level, data)`
+`shiny.add(spider_name, level, data)`
 
 向Shiny提交一个新的事件
 
@@ -32,6 +32,6 @@ shiny  = Shiny.Shiny(API_KEY, API_SECRET_KEY, API_HOST = 'https://shiny.kotori.m
 如果失败会抛出一个`ShinyError`，请注意捕获。
 
 
-`Shiny.recent()`
+`shiny.recent()`
 
 查询最新事件，返回一个`list`。
