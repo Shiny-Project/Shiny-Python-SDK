@@ -35,7 +35,7 @@ class Shiny:
         # 如果没有手动指定Hash，将会把data做一次md5生成hash
         try:
             if hash:
-                event["hash"] = hash
+                event["hash"] = str(hash)
             else:
                 m = hashlib.md5()
                 m.update(json.dumps(collections.OrderedDict(sorted(data.items()))).encode('utf-8'))
