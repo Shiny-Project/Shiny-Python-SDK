@@ -2,3 +2,4 @@
 /.idea
 /Shiny/__pycache__
 /Shiny_SDK.egg-info
+/dist

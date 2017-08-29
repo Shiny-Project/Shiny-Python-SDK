@@ -8,6 +8,10 @@ import json
 
 import requests
 
+def md5(text):
+    m = hashlib.md5()
+    m.update(text)
+    return m.hexdigest()
 
 class ShinyError(Exception):
     def __init__(self, message, code = 'unknown_error'):
@@ -37,9 +41,7 @@ class Shiny:
             if hash:
                 event["hash"] = str(hash)
             else:
-                m = hashlib.md5()
-                m.update(json.dumps(collections.OrderedDict(sorted(data.items()))).encode('utf-8'))
-                event["hash"] = m.hexdigest()
+                event["hash"] = md5(json.dumps(collections.OrderedDict(sorted(data.items()))).encode('utf-8'))
         except Exception as e:
             raise ShinyError('Fail to generate hash')
 
@@ -65,6 +67,13 @@ class Shiny:
     def recent(self):
         """获取最新项目"""
         url = self.API_HOST + '/Data/recent'
+        response = requests.get(url)
+        if response.status_code != 200:
+            raise ShinyError('Network error:' + str(response.status_code))
+        return json.loads(response.text)
+
+    def get_jobs(self):
+        url = self.API_HOST + '/Spider/jobs?api_key={}&sign={}'.format(self.API_KEY, md5(self.API_KEY + self.API_SECRET_KEY))
         response = requests.get(url)
         if response.status_code != 200:
             raise ShinyError('Network error:' + str(response.status_code))
