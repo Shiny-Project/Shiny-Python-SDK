@@ -13,6 +13,11 @@ def md5(text):
     m.update(text)
     return m.hexdigest()
 
+def sha1(text):
+    m = hashlib.sha1()
+    m.update(text)
+    return m.hexdigest()
+
 class ShinyError(Exception):
     def __init__(self, message, code = 'unknown_error'):
         self.message = message
@@ -47,10 +52,7 @@ class Shiny:
 
         event["data"] = data
 
-        sha1 = hashlib.sha1()
-        sha1.update((self.API_KEY + self.API_SECRET_KEY + json.dumps(event)).encode('utf-8'))
-
-        payload["sign"] = sha1.hexdigest()
+        payload["sign"] = sha1((self.API_KEY + self.API_SECRET_KEY + json.dumps(event)).encode('utf-8'))
 
         payload["event"] = json.dumps(event)
 
@@ -73,7 +75,8 @@ class Shiny:
         return json.loads(response.text)
 
     def get_jobs(self):
-        url = self.API_HOST + '/Spider/jobs?api_key={}&sign={}'.format(self.API_KEY, md5(self.API_KEY + self.API_SECRET_KEY))
+        print(self.API_HOST + '/Spider/jobs?api_key={}&sign={}'.format(self.API_KEY, sha1( (self.API_KEY + self.API_SECRET_KEY).encode('utf-8') )))
+        url = self.API_HOST + '/Spider/jobs?api_key={}&sign={}'.format(self.API_KEY, sha1( (self.API_KEY + self.API_SECRET_KEY).encode('utf-8') ))
         response = requests.get(url)
         if response.status_code != 200:
             raise ShinyError('Network error:' + str(response.status_code))
