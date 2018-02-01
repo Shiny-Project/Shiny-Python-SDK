@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='Shiny_SDK',
-    version='1.2',
+    version='1.3',
     keywords=('Shiny-Project'),
     description='Python SDK from Shiny.',
     classifiers=[

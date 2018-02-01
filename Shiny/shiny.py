@@ -29,6 +29,13 @@ class Shiny:
         self.API_KEY = api_key
         self.API_SECRET_KEY = api_secret_key
         self.API_HOST = api_host
+    
+    def sign(self, payload = {}):
+        """ API 请求签名 """
+        data = self.API_KEY + self.API_SECRET_KEY
+        for key in sorted(payload.keys()):
+            data += str(payload[key])
+        return sha1(data.encode('utf-8'))
 
     def add(self, spider_name, level, data=None, hash=False):
         """添加数据项"""
@@ -75,8 +82,7 @@ class Shiny:
         return json.loads(response.text)
 
     def get_jobs(self):
-        print(self.API_HOST + '/Spider/jobs?api_key={}&sign={}'.format(self.API_KEY, sha1( (self.API_KEY + self.API_SECRET_KEY).encode('utf-8') )))
-        url = self.API_HOST + '/Spider/jobs?api_key={}&sign={}'.format(self.API_KEY, sha1( (self.API_KEY + self.API_SECRET_KEY).encode('utf-8') ))
+        url = self.API_HOST + '/Job/query?api_key={}&sign={}'.format(self.API_KEY, self.sign())
         response = requests.get(url)
         if response.status_code != 200:
             raise ShinyError('Network error:' + str(response.status_code))
