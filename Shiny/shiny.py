@@ -24,7 +24,7 @@ def sha1(text):
 class ShinyError(Exception):
     def __init__(self, message, code='unknown_error'):
         self.message = message
-        self.code = message
+        self.code = code
 
 
 class Shiny:
