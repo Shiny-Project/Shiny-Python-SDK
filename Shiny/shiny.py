@@ -90,14 +90,16 @@ class Shiny:
                         sorted(event['data'].items()))).encode('utf-8'))
                 else:
                     raise ShinyError('Missing data in some events')
+            if 'level' not in event or 'spiderName' not in event:
+                raise ShinyError('Missing parameters.')
+            event['level'] = int(event['level'])
+
         payload["event"] = json.dumps(events)
 
         sign = self.sign(payload)
 
         payload["sign"] = sign
         payload["api_key"] = self.API_KEY
-
-        print(payload)
 
         response = requests.post(url, payload)
 
