@@ -73,8 +73,40 @@ class Shiny:
         if response.status_code != 200:
             try:
                 error = json.loads(response.text)
-            except Exception as e:
+            except Exception:
                 raise ShinyError('Network error: ' + str(response.status_code))
+
+            raise ShinyError(
+                'Shiny error: ' + str(error['error']['info']), code=str(error['error']['code']))
+
+    def add_many(self, events):
+        """添加多个事件"""
+        payload = {}
+        url = self.API_HOST + '/Data/add'
+        for event in events:
+            if 'hash' not in event:
+                if 'data' in event:
+                    event['hash'] = md5(json.dumps(collections.OrderedDict(
+                        sorted(event['data'].items()))).encode('utf-8'))
+                else:
+                    raise ShinyError('Missing data in some events')
+        payload["event"] = json.dumps(events)
+
+        sign = self.sign(payload)
+
+        payload["sign"] = sign
+        payload["api_key"] = self.API_KEY
+
+        print(payload)
+
+        response = requests.post(url, payload)
+
+        if response.status_code != 200:
+            try:
+                error = json.loads(response.text)
+            except Exception:
+                raise ShinyError('Network error: ' +
+                                    str(response.status_code))
 
             raise ShinyError(
                 'Shiny error: ' + str(error['error']['info']), code=str(error['error']['code']))
@@ -111,4 +143,5 @@ class Shiny:
             except Exception as e:
                 raise ShinyError('Network error: ' + str(response.status_code))
 
-            raise ShinyError('Shiny error: ' + str(error['error']['info']), code=str(error['error']['code']))
+            raise ShinyError(
+                'Shiny error: ' + str(error['error']['info']), code=str(error['error']['code']))
