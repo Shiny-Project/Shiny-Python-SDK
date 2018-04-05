@@ -78,6 +78,8 @@ class Shiny:
 
             raise ShinyError(
                 'Shiny error: ' + str(error['error']['info']), code=str(error['error']['code']))
+        else:
+            return json.loads(response.text)
 
     def add_many(self, events):
         """添加多个事件"""
@@ -112,6 +114,8 @@ class Shiny:
 
             raise ShinyError(
                 'Shiny error: ' + str(error['error']['info']), code=str(error['error']['code']))
+        else:
+            return json.loads(response.text)
 
     def recent(self):
         """获取最新项目"""
