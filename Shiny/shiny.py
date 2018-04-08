@@ -88,8 +88,12 @@ class Shiny:
         for event in events:
             if 'hash' not in event:
                 if 'data' in event:
-                    event['hash'] = md5(json.dumps(collections.OrderedDict(
-                        sorted(event['data'].items()))).encode('utf-8'))
+                    if 'hash' in event['data']:
+                        event['hash'] = event['data']['hash']
+                        event['data'].pop('hash')
+                    else:
+                        event['hash'] = md5(json.dumps(collections.OrderedDict(
+                            sorted(event['data'].items()))).encode('utf-8'))
                 else:
                     raise ShinyError('Missing data in some events')
             if 'level' not in event or 'spiderName' not in event:
@@ -110,7 +114,7 @@ class Shiny:
                 error = json.loads(response.text)
             except Exception:
                 raise ShinyError('Network error: ' +
-                                    str(response.status_code))
+                                 str(response.status_code))
 
             raise ShinyError(
                 'Shiny error: ' + str(error['error']['info']), code=str(error['error']['code']))
